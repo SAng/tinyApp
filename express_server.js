@@ -18,7 +18,14 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);
-  res.send("Ok");
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect('urls/' + shortURL);
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  let longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
 });
 
 app.get("/", (req, res) => {
@@ -47,7 +54,7 @@ app.listen(PORT, () => {
 function generateRandomString() {
   let result = '';
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for (let i = length; i > 0; --i) {
+  for (let i = 6; i > 0; --i) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
