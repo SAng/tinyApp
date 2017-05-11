@@ -1,47 +1,24 @@
-var express = require("express");
-var app = express();
-var cookieSession = require('cookie-session');
-
-var PORT = process.env.PORT || 8080;
+//Requirements and Constants:
+const express = require("express");
 const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session');
+const bodyParser = require("body-parser");
 
+const app = express();
 
-app.set('trust proxy', 1);
+const PORT = process.env.PORT || 8080;
 
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: 'session',
   keys: ['kfpoier0tu5g0rejgre', 'erljfo34if0jwfdkepf']
 }));
 
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
-};
-
+app.set('trust proxy', 1);
 app.set("view engine", "ejs");
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
-
-
-var urlDatabase = {
-  "b2xVn2": {
-    longURL: "http://www.lighthouselabs.ca",
-    creator: "userRandomID"
-  },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    creator: "userRandomID"
-  }
-};
+const users = {};
+const urlDatabase = {};
 
 function generateRandomString(n) {
   let result = '';
@@ -52,6 +29,7 @@ function generateRandomString(n) {
   return result;
 }
 
+//Post Requests:
 
 app.post("/register", (req, res) => {
   let userId = generateRandomString(10);
@@ -78,13 +56,6 @@ app.post("/register", (req, res) => {
   res.redirect('urls/');
 });
 
-app.get("/urls/new", (req, res) => {
-  let templateVars = { user: users[req.session.user_id] };
-  if (undefined === req.session.user_id) {
-    res.redirect('/login');
-  }
-  res.render("urls_new", templateVars);
-});
 
 app.post("/urls", (req, res) => {
   console.log(req.body);
@@ -120,7 +91,6 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls/');
 });
 
-
 app.post("/urls/:id/delete", (req, res) => {
   if (urlDatabase[req.params.id].creator === req.session.user_id) {
     delete urlDatabase[req.params.id];
@@ -133,6 +103,16 @@ app.post("/urls/:id/update", (req, res) => {
     urlDatabase[req.params.id].longURL = req.body.newlongURL;
   }
   res.redirect('/urls');
+});
+
+//Get Requests:
+
+app.get("/urls/new", (req, res) => {
+  let templateVars = { user: users[req.session.user_id] };
+  if (undefined === req.session.user_id) {
+    res.redirect('/login');
+  }
+  res.render("urls_new", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -178,8 +158,6 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = { user: users[req.session.user_id], allurls: urlDatabase, shortURL: req.params.id, owner: (urlDatabase[req.params.id].creator === req.session.user_id) };
   res.render("urls_show", templateVars);
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Tiny App listening on port ${PORT}!`);
