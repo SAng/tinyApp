@@ -2,14 +2,11 @@
 
 
 
-<% if(!username){ %>
-    <form action="/login/"" method="POST">
-      <label for="login">Enter a Username:</label>
-      <input id="login" type="text" name="login">
-      <input type="submit" value="Login">
-    </form>
+<% if(!user){ %>
+  <a href = '/login'>Login</a>
+  <a href = '/register'>Register</a>
   <% } else{ %>
-    <%= username %>
+    <%= user['email'] %>
     <form action="/logout/"" method="POST">
       <button>Logout</button>
     </form>
