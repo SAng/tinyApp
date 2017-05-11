@@ -4,6 +4,18 @@ var cookieParser = require('cookie-parser');
 
 var PORT = process.env.PORT || 8080;
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 app.set("view engine", "ejs");
 
@@ -16,6 +28,31 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.post("/register", (req, res) => {
+  let userID = generateRandomString(10);
+  let alreadyregistered = false;
+  for (user in users) {
+    if (users[user].email === req.body.email) {
+      alreadyregistered = true;
+    }
+  };
+  if (!req.body.email || !req.body.password) {
+    console.log('empty error');
+    res.status(400);
+    res.send('Email or Password cannot be empty.');
+  }
+  if (alreadyregistered) {
+    console.log('repeat error');
+    res.status(400);
+    res.send('Email already registered.');
+  }
+
+  users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+  console.log(users);
+  res.cookie('user_id', userID);
+  res.redirect('urls/');
+});
+
 app.get("/urls/new", (req, res) => {
   let templateVars = { username: req.cookies['username'] };
   res.render("urls_new", templateVars);
@@ -23,7 +60,7 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);
-  let shortURL = generateRandomString();
+  let shortURL = generateRandomString(6);
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect('urls/' + shortURL);
 });
@@ -58,6 +95,11 @@ app.get("/", (req, res) => {
   res.end("Hello!");
 });
 
+app.get("/register", (req, res) => {
+  let templateVars = { username: req.cookies['username'], urls: urlDatabase };
+  res.render("register_show", templateVars);
+});
+
 app.get("/urls", (req, res) => {
   let templateVars = { username: req.cookies['username'], urls: urlDatabase };
   res.render('urls_index', templateVars);
@@ -77,10 +119,10 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-function generateRandomString() {
+function generateRandomString(n) {
   let result = '';
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for (let i = 6; i > 0; --i) {
+  for (let i = n; i > 0; --i) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
