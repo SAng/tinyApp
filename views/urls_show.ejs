@@ -7,13 +7,17 @@
         <!-- Add your EJS code here -->
     <h1>Shortened URL and URL</h1>
 
-    <%= shortURL + ': ' + ((urls[shortURL]) || 'Invalid Shortened URL') %>
+    <%= shortURL + ': ' + ((allurls[shortURL].longURL) || 'Invalid Shortened URL') %>
 
-    <form action="/urls/<%= shortURL %>/update" method="POST" style="margin:150px;">
-      <label for="newlongURL">Enter a new URL:</label>
-      <input id="newlongURL" type="text" name="newlongURL" placeholder="http://" style="width: 300px">
-      <input type="submit" value="Update">
-    </form>
+    <% if(owner){ %>
+      <form action="/urls/<%= shortURL %>/update" method="POST" style="margin:150px;">
+        <label for="newlongURL">Enter a new URL:</label>
+        <input id="newlongURL" type="text" name="newlongURL" placeholder="http://" style="width: 300px">
+        <input type="submit" value="Update">
+      </form>
+       <% } else{ %>
+       <h2>You are not the owner of this URL<h2>
+     <% } %>
 
   </body>
 </html>
