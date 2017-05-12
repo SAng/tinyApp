@@ -11,13 +11,13 @@ TinyApp is a full stack web url shortener application built with Express and Nod
 
 ## Dependencies
 
--Node.js
--Express
--bcrypt
--body-parser
--cookie-session
--ejs
--express
+- Node.js
+- Express
+- bcrypt
+- body-parser
+- cookie-session
+- ejs
+- express
 
 ## Getting Started
 
