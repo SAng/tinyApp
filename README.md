@@ -7,7 +7,7 @@ TinyApp is a full stack web url shortener application built with Express and Nod
 !['Home Page'](https://github.com/boomerandzapper/tinyApp/blob/master/Docs/Homepage.png)
 !['Edit Url Page'](https://github.com/boomerandzapper/tinyApp/blob/master/Docs/URL_Edit_Page.png)
 !['Login Page'](https://github.com/boomerandzapper/tinyApp/blob/master/Docs/Login%20Page.png)
-!['Registration Page'](https://github.com/boomerandzapper/tinyApp/blob/master/Docs/Registration%20Page.png)
+
 
 ## Dependencies
 
@@ -21,7 +21,7 @@ TinyApp is a full stack web url shortener application built with Express and Nod
 
 ## Getting Started
 
--Install all dependencies (use npm install)
--Run the development web server using 'node express_server.js'.
--Default port is 8000
+- Install all dependencies (use npm install)
+- Run the development web server using 'node express_server.js'.
+- Default port is 8000
 
